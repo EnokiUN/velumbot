@@ -6,4 +6,5 @@ from commands import command
 
 @command()
 async def foo(client: Client, event: MessageCreateEvent, args: Optional[str]):
+    """Replies with bar"""
     await client.send("bar")

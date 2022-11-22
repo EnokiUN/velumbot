@@ -13,6 +13,7 @@ class Client(GatewayBot):
         self._prefix = prefix
         self._commands: dict[str, Command] = {}
         self.subscribe(MessageCreateEvent, self.on_message)
+        self.add_command(Command(self.help_command, "help"))
 
     @property
     def prefix(self) -> str:
@@ -57,3 +58,16 @@ class Client(GatewayBot):
             except Exception as e:
                 await self.send(f"a fucky wucky has occured\n\n{e}")
                 raise
+
+    async def help_command(self, _client: GatewayBot, _event: MessageCreateEvent, args: Optional[str]):
+        """A simple simple simple help command."""
+        if args is None:
+            longest = [len(name)
+                       for name in self._commands.keys()]
+            longest.sort(reverse=True)
+            padding = longest[0] + 4
+            return await self.send("```\n" + "\n".join(f"{name}:{' ' * (padding - len(name))}{cmd.desc}" for name, cmd in self._commands.items()) + "\n```")
+        if (cmd := self._commands.get(args.split()[0])) is not None:
+            await self.send(f"{cmd.name}\n\n{cmd.desc}")
+        else:
+            await self.send("Command not found")
