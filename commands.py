@@ -20,7 +20,7 @@ class Command:
     ):
         self.func = func
         self.name = name or func.__name__
-        self.desc = desc
+        self.desc = desc or func.__doc__
 
 
 def command(name: Optional[str] = None, desc: Optional[str] = None):
